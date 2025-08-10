@@ -1,0 +1,30 @@
+{
+  "name": "brainstorm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "brainstorm": "bin/brainstorm.js"
+  },
+  "scripts": {
+    "start": "node bin/brainstorm.js",
+    "dev": "node --watch bin/brainstorm.js",
+    "format": "prettier -w ."
+  },
+  "dependencies": {
+    "chalk": "5.3.0",
+    "commander": "12.1.0",
+    "dotenv": "16.4.5",
+    "inquirer": "9.3.7",
+    "node-fetch": "3.3.2",
+    "openai": "4.55.6",
+    "uuid": "9.0.1",
+    "yaml": "2.5.0"
+  },
+  "devDependencies": {
+    "prettier": "3.3.3"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
