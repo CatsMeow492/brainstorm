@@ -108,6 +108,42 @@ program
     process.exit(0)
   })
 
+program
+  .command('export')
+  .description('Export session or specific artifact to Markdown (default)')
+  .option('--id <sessionId>', 'Session id')
+  .option('--artifact <type>', 'Artifact type to focus (optional)')
+  .action(async (cmdOpts) => {
+    if (!cmdOpts.id) {
+      console.error(chalk.red('Please provide --id <sessionId>'))
+      process.exit(1)
+    }
+    const session = await store.load(cmdOpts.id)
+    if (cmdOpts.artifact) {
+      const art = (session.artifacts || []).find(a => a.type === cmdOpts.artifact)
+      if (!art) {
+        console.error(chalk.red(`Artifact not found: ${cmdOpts.artifact}`))
+        process.exit(1)
+      }
+      // Print a focused Markdown snippet to stdout
+      console.log(`# ${cmdOpts.artifact} for ${session.title}`)
+      if (art.summary) {
+        console.log(`\n${art.summary}\n`)
+      }
+      if (art.data) {
+        console.log('```json')
+        console.log(JSON.stringify(art.data, null, 2))
+        console.log('```')
+      }
+      process.exit(0)
+    } else {
+      // Full session markdown already saved on write; re-save to regenerate
+      await store.save(session)
+      console.log(chalk.gray(`Wrote Markdown to sessions/${session.id}.md`))
+      process.exit(0)
+    }
+  })
+
 program.parse(process.argv)
 
 function chooseAgent() {

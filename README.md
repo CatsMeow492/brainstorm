@@ -38,6 +38,14 @@ brainstorm advance --id <sessionId> --stage <concept|problem_solution_fit|gtm|pi
 
 # generate an artifact (currently: lean-canvas)
 brainstorm generate --id <sessionId> --artifact lean-canvas
+
+# also available
+brainstorm generate --id <sessionId> --artifact gtm-plan
+brainstorm generate --id <sessionId> --artifact one-pager
+
+# export full session markdown or a specific artifact to stdout
+brainstorm export --id <sessionId>
+brainstorm export --id <sessionId> --artifact lean-canvas
 ```
 
 ## Living progress
@@ -52,8 +60,8 @@ This is a living README tracking scope and progress as we build from a simple CL
 - [x] Interactive CLI with local and OpenAI agents
 - [x] Session save to `sessions/*.json|md`
 - [x] Stages scaffold: `concept → …`
-- [x] Artifact scaffold: `lean-canvas` generator (MVP)
-- [x] CLI subcommands: `list`, `open`, `advance`, `generate`
+- [x] Artifact generators: `lean-canvas`, `gtm-plan`, `one-pager`
+- [x] CLI subcommands: `new`, `list`, `open`, `advance`, `generate`, `export`
 - [ ] Web UI (Next.js) with visualizations
 - [ ] GTM plan generator and export
 - [ ] One‑pager export (Markdown/PDF)
