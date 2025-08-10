@@ -147,11 +147,12 @@ program
 program.parse(process.argv)
 
 function chooseAgent() {
-  const forceLocal = !!options.local
+  const opts = getOptions()
+  const forceLocal = !!opts.local
   const hasKey = !!process.env.OPENAI_API_KEY
   if (!forceLocal && hasKey) {
     try {
-      return new OpenAIAgent({ model: options.model })
+      return new OpenAIAgent({ model: opts.model })
     } catch (e) {
       console.error(chalk.yellow('Falling back to local agent:'), e.message)
       return new LocalAgent()
@@ -160,10 +161,10 @@ function chooseAgent() {
   return new LocalAgent()
 }
 
-async function interactiveLoop({ agent, session }) {
-  if (session.messages.length === 0 && options.prompt) {
-    session.messages.push({ role: 'user', text: options.prompt })
-    const reply = await agent.generate({ prompt: options.prompt, context: session.messages })
+async function interactiveLoop({ agent, session, initialPrompt }) {
+  if (session.messages.length === 0 && initialPrompt) {
+    session.messages.push({ role: 'user', text: initialPrompt })
+    const reply = await agent.generate({ prompt: initialPrompt, context: session.messages })
     session.messages.push(reply)
     console.log('\n' + chalk.cyan(reply.text) + '\n')
   }
@@ -229,8 +230,9 @@ async function main() {
   // If a subcommand was used, actions above already executed and exited.
   // Fallback: start a new interactive session.
   const agent = chooseAgent()
-  const session = createEmptySession({ title: options.prompt || 'Brainstorm Session' })
-  await interactiveLoop({ agent, session })
+  const opts = getOptions()
+  const session = createEmptySession({ title: opts.prompt || 'Brainstorm Session' })
+  await interactiveLoop({ agent, session, initialPrompt: opts.prompt })
 }
 
 main().catch(err => {
